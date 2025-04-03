@@ -24,8 +24,7 @@ async def yandex_auth_callback(request: Request, service: oauth2_service):
     try:
         token = await service.oauth.yandex.authorize_access_token(request)
         user = await service.oauth.yandex.get('https://login.yandex.ru/info?format=json', token=token)
-        user_json = user.json()
-        tokens = await service.register_or_update(user_json)
+        tokens = await service.register_or_update(user)
         if not user:
             raise HTTPException(status_code=400, detail="Не удалось получить данные пользователя")
 

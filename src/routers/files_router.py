@@ -9,15 +9,10 @@ files_router = APIRouter(tags=['Файлы', ], prefix='/files')
 async def upload(request: Request, file: UploadFile, filename: str, service: file_service):
     access_token = request.cookies.get('users_access_token')
     try:
-        type = file.headers['content-type']
-        extension = file.filename.split('.')[-1]
-        if 'audio' in type:
-            res = await service.save_file(file, filename, extension, access_token)
-            if not res:
-                return {'ok': False, 'detail': 'Файл с таким названием уже существует'}
-            return {'ok': True, 'detail': 'Файл успешно загружен.'}
-        else:
-            raise HTTPException(status_code=400, detail='Неверный тип файла')
+        res = await service.save_file(file, filename, access_token)
+        if not res:
+            return {'ok': False, 'detail': 'Файл с таким названием уже существует'}
+        return {'ok': True, 'detail': 'Файл успешно загружен.'}
     except HTTPException:
         raise HTTPException(status_code=401, detail='Not authorize')
 

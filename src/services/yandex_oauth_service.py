@@ -24,13 +24,14 @@ class Oauth2Service:
         )
 
     async def register_or_update(self, user):
+        user_json = user.json()
         user_data = SRegister(
-            email=user['default_email'],
-            login=user['login'],
-            yandex_id=user['id'],
-            first_name=user['first_name'],
-            last_name=user['last_name'],
-            sex=user['sex'])
+            email=user_json['default_email'],
+            login=user_json['login'],
+            yandex_id=user_json['id'],
+            first_name=user_json['first_name'],
+            last_name=user_json['last_name'],
+            sex=user_json['sex'])
         user_model = await add_user_query(user_data, self.session)
         id = user_model
         access_token = create_access_token({'sub': f'{id}'})
